@@ -1,0 +1,9 @@
+{
+  "name": "readme-creator",
+  "version": "0.0.1",
+  "description": "A fast readme creator with all necessary in command line",
+  "main": "index.js",
+  "repository": "https://github.com/josefilho/readme-creator.git",
+  "author": "Jose Carlos (NullByte)",
+  "license": "MIT"
+}
