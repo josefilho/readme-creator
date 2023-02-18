@@ -24,7 +24,7 @@ void printHelp();
 
 #endif
 
-string githubBadges(){
+string githubBadges(const string& AUTHOR){
   string madeBy;
   string repoSize;
   string topLang;
@@ -40,13 +40,19 @@ string githubBadges(){
 
   repoSize = "https://img.shields.io/github/repo-size/" + user + "/" + repo + "?color=7159c1&style=for-the-badge";
   topLang = "https://img.shields.io/github/languages/top/" + user + "/" + repo + "?color=7159c1&style=for-the-badge";
-  madeBy = "https://img.shields.io/badge/Made%20by-" + user + "-7159c1?style=for-the-badge";
+  madeBy = "https://img.shields.io/badge/Made%20by-" + AUTHOR + "-7159c1?style=for-the-badge";
 
   repoSize = "<img src=\"" + repoSize + "\" />";
   topLang = "<img src=\"" + topLang + "\" />";
   madeBy = "<img src=\"" + madeBy + "\" />";
 
-  return "<center>\n\t" + madeBy + "\n\t" + repoSize + "\n\t" + topLang + "\n" + "</center>";
+  return "\n" + madeBy + "\n" + repoSize + "\n" + topLang + "\n";
+}
+
+string toLower(const string& str){
+  string lower = str;
+  transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+  return lower;
 }
 
 int main(int argc, char **argv){
@@ -64,8 +70,8 @@ int main(int argc, char **argv){
       } else {
         cout << RED_BOLD_TERM << "Error: " << RESET_TERM << "Invalid argument" << endl;
         printHelp();
+        return 1;
       }
-      return 1;
     } else {
       cout << RED_BOLD_TERM << "Error: " << RESET_TERM << "Too many arguments" << endl;
       printHelp();
@@ -103,42 +109,47 @@ int main(int argc, char **argv){
   cout << GREEN_BOLD_TERM << "Description: " << RESET_TERM;
   getline(cin, description);
 
-  cout << GREEN_BOLD_TERM << "Subtitles: " << RESET_TERM;
-  string subtitle;
-  while(true){
+  cout << GREEN_BOLD_TERM << "Subtitles: \n" << RESET_TERM << endl;
+  bool stop;
+  do {
+    string subtitle;
+    cout << CYAN_BOLD_TERM << "Subtitle: " << RESET_TERM;
     getline(cin, subtitle);
-    if(subtitle == "") break;
     subtitles.push_back(subtitle);
-  }
-
-  cout << GREEN_BOLD_TERM << "Subdescriptions: " << RESET_TERM;
-  string subDescription;
-  for(size_t i = 0; i < subtitles.size(); i++){
-    cout << CYAN_BOLD_TERM << "Subdescription(" 
-         << MAGENTA_BOLD_TERM << subtitles[i] 
-         << CYAN_BOLD_TERM <<"): " << RESET_TERM;
+    
+    string subDescription;
+    cout << BLUE_BOLD_TERM << "Subdescription: " << RESET_TERM;
     getline(cin, subDescription);
     subDescriptions.push_back(subDescription);
-  }
+
+    cout << CYAN_BOLD_TERM << "Add another subtitle? (y/n): " << RESET_TERM;
+    string answer;
+    getline(cin, answer);
+    if(answer == "n") stop = true;
+    else stop = false;
+  } while(!stop);
 
   ofstream file(filePath);
-  file << "<center>" << endl;
-  file << "# " << title << endl;
+  file << "<center>" << endl << endl;
+  file << "# " << title << endl << endl;
   
   if(git){
-    file << githubBadges() << endl;
+    file << githubBadges(author) << endl;
   }
   
-
-  file << "</center>" << endl;
-  file << description << endl;
+  file << endl << description << endl;
   file << endl;
+  file << "</center>" << endl << endl;
 
-  file << "## Table of Contents" << endl;
+  file << "## Sumário" << endl;
   file << endl;
+  
   for_each(subtitles.begin(), subtitles.end(), [&](string subtitle){
-    file << "* [" << subtitle << "](#" << subtitle << ")" << endl;
+    string sub = toLower(subtitle);
+    replace(sub.begin(), sub.end(), ' ', '-');
+    file << "* [" << subtitle << "](#" << sub << ")" << endl;
   });
+
   file << endl;
 
   for(size_t i = 0; i < subtitles.size(); i++){
@@ -148,8 +159,12 @@ int main(int argc, char **argv){
     file << endl;
   }
 
-  file << endl << "---" << endl;
-  file << "Made with <3 by " << author << endl;
+  file << endl << "---" << endl << endl;
+  file << "Feito com 💜 por " << author << "." << endl;
+  file << "Se você gostou do projeto, dê uma ⭐️!" << endl << endl;
+  file << "Dê uma olhada no meu [Linkedin](https://www.linkedin.com/in/filhojosecs/)." << endl;
+
+  file.close();
 
   return 0;
 }
