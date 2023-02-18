@@ -1,4 +1,4 @@
-<center>
+<div align='center'>
 
 # README Creator
 
@@ -10,7 +10,7 @@
 
 Pequeno projeto que visa criar README's rápidos e estilosos preenchendo algumas informações.
 
-</center>
+</div>
 
 ## Sumário
 
