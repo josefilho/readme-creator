@@ -130,7 +130,7 @@ int main(int argc, char **argv){
   } while(!stop);
 
   ofstream file(filePath);
-  file << "<center>" << endl << endl;
+  file << "<div align='center'>" << endl << endl;
   file << "# " << title << endl << endl;
   
   if(git){
@@ -139,7 +139,7 @@ int main(int argc, char **argv){
   
   file << endl << description << endl;
   file << endl;
-  file << "</center>" << endl << endl;
+  file << "</div>" << endl << endl;
 
   file << "## Sumário" << endl;
   file << endl;
